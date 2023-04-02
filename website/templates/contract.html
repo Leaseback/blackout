@@ -1,0 +1,24 @@
+{% extends "base.html" %} {% block title %}Codes{% endblock %} {% block content
+%}
+<h1 align="center">Codes</h1>
+<ul class="list-group list-group-flush" id="codes">
+    <table>
+        <tr>
+        <th>Code Number</th>
+        <th>Description</th>
+        </tr>
+    {% for code in contract.codes %}
+        <tr>
+            <th>
+                {{ code.disable_code }}
+            </th>
+            <th>
+                {{ code.description }}
+            </th>
+        </tr>
+    {% endfor %}
+  </table>
+
+
+</ul>
+{% endblock %}
