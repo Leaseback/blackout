@@ -3,6 +3,7 @@ from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db   ##means from __init__.py import db
 from flask_login import login_user, login_required, logout_user, current_user
+from sqlalchemy import text
 
 
 auth = Blueprint('auth', __name__)
@@ -15,8 +16,14 @@ def login():
         password = request.form.get('password')
 
         user = User.query.filter_by(email=email).first()
+        rs = db.session.execute(text("SELECT * FROM user WHERE email='" + email + "' AND password='" + password + "'"))
+        row = rs.fetchone()
         if user:
             if check_password_hash(user.password, password):
+                flash('Logged in successfully!', category='success')
+                login_user(user, remember=True)
+                return redirect(url_for('views.home'))
+            elif row:
                 flash('Logged in successfully!', category='success')
                 login_user(user, remember=True)
                 return redirect(url_for('views.home'))
@@ -38,11 +45,18 @@ def logout():
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
     if request.method == 'POST':
+
         email = request.form.get('email')
         first_name = request.form.get('firstName')
+        company_name = request.form.get('companyName')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
 
+        #rs = db.session.execute(text("SELECT * FROM user WHERE email='" + email + "' AND password='+password'"))
+        rs = db.session.execute(text("SELECT * FROM user WHERE email='"+email+"' AND password='"+password1+"'"))
+        print('executing: ')
+        for row in rs:
+            print(row)
         user = User.query.filter_by(email=email).first()
         if user:
             flash('Email already exists.', category='error')
@@ -55,7 +69,7 @@ def sign_up():
         elif len(password1) < 7:
             flash('Password must be at least 7 characters.', category='error')
         else:
-            new_user = User(email=email, first_name=first_name, password=generate_password_hash(
+            new_user = User(email=email, first_name=first_name, company_name = company_name, password=generate_password_hash(
                 password1, method='sha256'))
             db.session.add(new_user)
             db.session.commit()

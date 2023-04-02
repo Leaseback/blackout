@@ -1,0 +1,21 @@
+{% extends "base.html" %} {% block title %}Users{% endblock %} {% block content
+%}
+<h1 align="center">Users</h1>
+<h2>Curious about our other partners? Take a look yourself and ask them just how great we are!</h2>
+<ul class="list-group list-group-flush" id="user_field">
+  <table>
+    <tr>
+    <th>Company</th>
+    <th>Contact Email</th>
+    <th>Contact Name</th>
+    </tr>
+    {% for user in users %}
+    <tr>
+      <th>{{ user[1] }}</th>
+      <th>{{ user[3] }}</th>
+      <th>{{ user[4] }}</th>
+    </tr>
+    {% endfor %}
+  </table>
+</ul>
+{% endblock %}
