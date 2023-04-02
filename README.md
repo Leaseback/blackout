@@ -33,5 +33,5 @@ sqlite3 <ABSOLUTEPATHOFDATABASEFILEHERE>
 .import mock_users.csv User
 .import mock_contracts.csv Contract
 .import mock_codes.csv Code 
-insert into create_acc_code VALUES (1532,'tJmq1832')
+insert into create_acc_code VALUES (1532,'tJmq1832');
 ```
