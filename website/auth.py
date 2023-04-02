@@ -52,16 +52,11 @@ def sign_up():
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
         code = request.form.get('code')
-        valid_code = CreateAccCode.query.filter_by(create_acc_code=code).first()
+        valid_code = db.session.execute(text("SELECT * FROM create_acc_code WHERE create_acc_code='"+code+"'")).fetchone()
         if not valid_code:
             flash('Error: Invalid access code. Please contact our staff to receive a valid code. This code is important to confirm your identity and secure our site.')
             return render_template("sign_up.html", user=current_user)
 
-        #rs = db.session.execute(text("SELECT * FROM user WHERE email='" + email + "' AND password='+password'"))
-        rs = db.session.execute(text("SELECT * FROM user WHERE email='"+email+"' AND password='"+password1+"'"))
-        print('executing: ')
-        for row in rs:
-            print(row)
         user = User.query.filter_by(email=email).first()
         if user:
             flash('Email already exists.', category='error')
