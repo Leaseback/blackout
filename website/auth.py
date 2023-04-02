@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from .models import User
+from .models import User, CreateAccCode
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db   ##means from __init__.py import db
 from flask_login import login_user, login_required, logout_user, current_user
@@ -51,6 +51,11 @@ def sign_up():
         company_name = request.form.get('companyName')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
+        code = request.form.get('code')
+        valid_code = CreateAccCode.query.filter_by(create_acc_code=code).first()
+        if not valid_code:
+            flash('Error: Invalid access code. Please contact our staff to receive a valid code. This code is important to confirm your identity and secure our site.')
+            return render_template("sign_up.html", user=current_user)
 
         #rs = db.session.execute(text("SELECT * FROM user WHERE email='" + email + "' AND password='+password'"))
         rs = db.session.execute(text("SELECT * FROM user WHERE email='"+email+"' AND password='"+password1+"'"))
