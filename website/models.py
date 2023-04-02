@@ -3,12 +3,17 @@ from flask_login import UserMixin
 from sqlalchemy.sql import func
 
 
+class Code(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    disable_code = db.Column(db.Integer)
+    description = db.Column(db.String(150))
+    contract = db.Column(db.Integer, db.ForeignKey('contract.id'))
+
 class Contract(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sat_name = db.Column(db.String(150))
-    disable_code = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
+    codes = db.relationship('Code')
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)

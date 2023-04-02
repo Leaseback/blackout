@@ -30,6 +30,12 @@ def users():
     users = db.session.execute(text("SELECT * FROM user"))
     return render_template("users.html",user=current_user, users=users)
 
+@views.route('/contracts/<int:contract_id>')
+@login_required
+def contract_page(contract_id):
+    # code to fetch the contract data for the given contract_id
+    contract_data = Contract.query.filter_by(id=contract_id).first()
+    return render_template('contract.html', user=current_user, contract=contract_data)
 
 # @views.route('/delete-note', methods=['POST'])
 # def delete_note():

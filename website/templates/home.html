@@ -2,12 +2,11 @@
 %}
 <h1 align="center">Contracts</h1>
 <ul class="list-group list-group-flush" id="notes">
-  {% for contract in user.contracts %}
-  <li class="list-group-item">
-    {{ contract.sat_name }}
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </li>
-  {% endfor %}
+    {% for contract in user.contracts %}
+   <a class="nav-item nav-link" id="contractpage" href="{{ url_for('views.contract_page', contract_id=contract.id) }}">{{ contract.sat_name }}</a>
+    {% endfor %}
+  </table>
+
+
 </ul>
 {% endblock %}
