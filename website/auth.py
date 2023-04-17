@@ -11,26 +11,29 @@ auth = Blueprint('auth', __name__)
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
+    try:
+        if request.method == 'POST':
+            email = request.form.get('email')
+            password = request.form.get('password')
 
-        user = User.query.filter_by(email=email).first()
-        rs = db.session.execute(text("SELECT * FROM user WHERE email='" + email + "' AND password='" + password + "'"))
-        row = rs.fetchone()
-        if user:
-            if check_password_hash(user.password, password):
-                flash('Logged in successfully!', category='success')
-                login_user(user, remember=True)
-                return redirect(url_for('views.home'))
-            elif row:
-                flash('Logged in successfully!', category='success')
-                login_user(user, remember=True)
-                return redirect(url_for('views.home'))
+            user = User.query.filter_by(email=email).first()
+            rs = db.session.execute(text("SELECT * FROM user WHERE email='" + email + "' AND password='" + password + "'"))
+            row = rs.fetchone()
+            if user:
+                if check_password_hash(user.password, password):
+                    flash('Logged in successfully!', category='success')
+                    login_user(user, remember=True)
+                    return redirect(url_for('views.home'))
+                elif row:
+                    flash('Logged in successfully!', category='success')
+                    login_user(user, remember=True)
+                    return redirect(url_for('views.home'))
+                else:
+                    flash('Incorrect password, try again.', category='error')
             else:
-                flash('Incorrect password, try again.', category='error')
-        else:
-            flash('Email does not exist.', category='error')
+                flash('Email does not exist.', category='error')
+    except:
+        flash('Unknown error has occured.', category='error')
 
     return render_template("login.html", user=current_user)
 
